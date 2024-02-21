@@ -378,12 +378,17 @@ $(document).ready(function () {
                 var cellId = 'cell-'+row+'-'+col;
                 var cell = document.getElementById(cellId);
 
-                // Update the class to reflect the new state
-                if (data.cellStates[row][col]) {
+                var cellState = data.cellStates[row][col]
+
+                if (cellState.isAlive) {
                     cell.classList.add('alive');
+                    cell.style.border = `1px solid ${cellState.color}`;
                 } else {
                     cell.classList.remove('alive');
+                    cell.style.backgroundColor = `${cellState.color}`;
+                    cell.style.border = `1px solid ${cellState.color}`;
                 }
+                // Update the class to reflect the new state
                 
             }
         }

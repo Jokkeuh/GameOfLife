@@ -91,7 +91,7 @@
                     <div id="cell-@row-@col" 
                           data-row="@row" 
                           data-col="@col"
-                          class="cell @(Model[row,col]?.IsAlive == true ? "alive": "") propColor@(Model[row,col].Color.Name) "
+                          class="cell @(Model[row,col]?.IsAlive == true ? "alive": "")"
                           onclick="addPatternTwice(chosenPattern, @row, @col)"
                     >
                             
@@ -177,9 +177,7 @@ else
         border: 1px solid green;
     }*/
 
-    .propColorRed {
-        border: 1px solid red;
-    }
+  
 
 
 

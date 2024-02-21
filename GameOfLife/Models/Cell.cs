@@ -4,10 +4,10 @@ namespace GameOfLife.Models
 {
     public class Cell
     {
-        public Color Color { get; set; }
+        public string Color { get; set; }
         public bool IsAlive { get; set; } = false;
 
-        public Cell(bool state, Color color)
+        public Cell(bool state, string color)
         {
                 IsAlive = state;
 

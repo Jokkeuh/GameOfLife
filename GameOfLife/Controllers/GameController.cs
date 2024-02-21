@@ -33,7 +33,7 @@ namespace GameOfLife.Controllers
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    grid[i, j] = new Cell(service.grid[i, j].IsAlive, Color.Gray);
+                    grid[i, j] = new Cell(service.grid[i, j].IsAlive, service.grid[i,j].Color);
                 }
             };
             }
@@ -57,16 +57,16 @@ namespace GameOfLife.Controllers
 
             var gridDto = new GridDto
             {
-                CellStates = new List<List<bool>>()
+                CellStates = new List<List<CellState>>()
             };
 
             for (int row = 0; row < Rows; row++)
             {
-                var rowlist = new List<bool>();
+                var rowlist = new List<CellState>();
                 for (int col = 0; col < Columns; col++)
                 {
                     var cell = grid?[row, col];
-                    rowlist.Add(grid?[row, col]?.IsAlive ?? false);
+                    rowlist.Add(new CellState(grid?[row, col]?.IsAlive ?? false, grid?[row, col]?.Color));
                 }
                 gridDto.CellStates.Add(rowlist);
             }
@@ -85,17 +85,17 @@ namespace GameOfLife.Controllers
 
             var gridDto = new GridDto
             {
-                CellStates = new List<List<bool>>()
+                CellStates = new List<List<CellState>>()
             };
 
             for (int r = 0; r < Rows; r++)
             {
-                var rowList = new List<bool>();
+                var rowList = new List<CellState>();
                 for (int c = 0; c < Columns; c++)
                 {
                     var cell = grid?[row, col];
                     //rowList.Add((cell.IsAlive, default));
-                    rowList.Add(grid?[r, c]?.IsAlive ?? false);
+                    rowList.Add(new CellState(grid?[r, c]?.IsAlive ?? false, grid?[row, col]?.Color));
                 }
                 gridDto.CellStates.Add(rowList);
             }
@@ -110,16 +110,42 @@ namespace GameOfLife.Controllers
 
 
 
+
+        public enum Colors
+        {
+            Red, Green, Blue
+        };
+
+        string currentColor;
+
+        public string GetRandomColorName()
+        {
+            int random = new Random().Next(0, 4);
+            foreach (Colors color in Enum.GetValues(typeof(Colors)))
+            {
+                if ((int)color == random)
+                {
+                    currentColor = color.ToString();
+                }
+            }
+            return currentColor;
+        }
         private void UpdateGrid()
         {
+            
 
-            // init empty array
-            Cell[,] newGrid = new Cell[Rows, Columns];
+
+
+
+
+
+        // init empty array
+        Cell[,] newGrid = new Cell[Rows, Columns];
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    newGrid[i, j] = new Cell(false, Color.Black);
+                    newGrid[i, j] = new Cell(false, Color.Black.Name);
                 }
             }
 
@@ -128,7 +154,7 @@ namespace GameOfLife.Controllers
                 for (int col = 0; col < Columns; col++)
                 {
                     int liveBuren = CountLiveBuren(row, col);
-
+                    var currColor = newGrid[row,col].Color;
                     // Check the current state of the cell
                     bool isAlive = grid?[row, col]?.IsAlive ?? false;
 
@@ -138,13 +164,14 @@ namespace GameOfLife.Controllers
                         if (liveBuren < 2 || liveBuren > 3)
                         {
                             newGrid[row, col].IsAlive = false; // Cell dies
-                            newGrid[row, col].Color = Color.Black; 
+                            newGrid[row, col].Color = Color.Black.Name;
                         }
                         else
                         {
+                            
                             newGrid[row, col].IsAlive = true; // Cell survives
-                            newGrid[row, col].Color = Color.White; 
 
+                            newGrid[row, col].Color = GetRandomColorName();
                         }
                     }
                     else
@@ -152,13 +179,13 @@ namespace GameOfLife.Controllers
                         if (liveBuren == 3)
                         {
                             newGrid[row, col].IsAlive = true; // Cell is born
-                            newGrid[row, col].Color = Color.White;
+                            newGrid[row, col].Color = GetRandomColorName();
 
                         }
                         else
                         {
                             newGrid[row, col].IsAlive = false; // Cell remains dead
-                            newGrid[row, col].Color = Color.Black;
+                            newGrid[row, col].Color = Color.Black.Name;
 
                         }
                     }
@@ -221,15 +248,15 @@ namespace GameOfLife.Controllers
                     Cell currentCell = grid[row, col];
 
                     // If the cell is alive and has a color, propagate the color to its neighbors
-                    if (currentCell.IsAlive && currentCell.Color != Color.Empty)
+                    if (currentCell.IsAlive && currentCell.Color != string.Empty)
                     {
-                        PropagateColorToNeighbors(row, col, Color.Red);
+                        PropagateColorToNeighbors(row, col, Color.Red.Name);
                     }
                 }
             }
         }
 
-        private void PropagateColorToNeighbors(int row, int col, Color color)
+        private void PropagateColorToNeighbors(int row, int col, string color)
         {
             // Define the neighborhood offsets
             int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -248,7 +275,7 @@ namespace GameOfLife.Controllers
                     Cell neighborCell = grid[newRow, newCol];
 
                     // If the neighbor is not already colored, propagate the color to it
-                    if (!neighborCell.IsAlive || neighborCell.Color == Color.Empty)
+                    if (!neighborCell.IsAlive || neighborCell.Color == String.Empty)
                     {
                         neighborCell.Color = color;
                     }

@@ -4,6 +4,6 @@ namespace GameOfLife.Models
 {
     public class GridDto
     {
-        public List<List<bool>>? CellStates {  get; set; }
+        public List<List<CellState>>? CellStates {  get; set; }
     }
 }

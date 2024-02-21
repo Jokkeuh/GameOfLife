@@ -65,7 +65,7 @@ namespace GameOfLife.Models
                         {
                             if (pattern[i][j] == 1)
                             {
-                                grid[curRow, curCol] = new Cell(true, Color.Red);
+                                grid[curRow, curCol] = new Cell(true, default);
                             }
       
                         }
@@ -83,7 +83,7 @@ namespace GameOfLife.Models
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    grid[i, j] = new Cell(false, Color.Black);
+                    grid[i, j] = new Cell(false, Color.Black.Name);
 
                 }
             }
